@@ -10,4 +10,5 @@ func (s *Server) registerRoutes() {
 
 	// s.router.HandleFunc("/health", s.healthHandler)s
 	s.router.HandleFunc("/builds", buildHandler.CreateBuild)
+	s.router.HandleFunc("/builds/", buildHandler.GetBuild)
 }

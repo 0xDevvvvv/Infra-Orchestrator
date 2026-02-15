@@ -22,3 +22,11 @@ func (bs *BuildStore) Save(build *models.Build) {
 	defer bs.mu.Unlock()
 	bs.builds[build.ID] = build
 }
+
+func (bs *BuildStore) Get(id string) (*models.Build, bool) {
+	bs.mu.RLock()
+	defer bs.mu.RUnlock()
+
+	build, ok := bs.builds[id]
+	return build, ok
+}

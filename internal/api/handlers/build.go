@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/0xDevvvvv/Infra-Orchestrator/internal/models"
@@ -67,4 +68,30 @@ func (h *BuildHandler) CreateBuild(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+}
+
+func (h *BuildHandler) GetBuild(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	path := r.URL.Path
+	parts := strings.Split(path, "/")
+
+	if len(parts) != 3 {
+		http.Error(w, "Invalid Build ID parameters", http.StatusBadRequest)
+		return
+	}
+
+	id := parts[2]
+
+	build, ok := h.store.Get(id)
+	if !ok {
+		http.Error(w, "Build Not Found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(build)
 }

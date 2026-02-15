@@ -16,9 +16,7 @@ func NewServer() *Server {
 		router: http.NewServeMux(),
 		store:  storage.NewBuildStore(),
 	}
-
 	s.registerRoutes()
-
 	return s
 }
 
