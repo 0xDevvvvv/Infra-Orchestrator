@@ -6,9 +6,8 @@ import (
 
 func (s *Server) registerRoutes() {
 
-	buildHandler := handlers.NewBuildHandler(s.store)
-
-	// s.router.HandleFunc("/health", s.healthHandler)s
+	buildHandler := handlers.NewBuildHandler(s.store, s.queue)
+	
 	s.router.HandleFunc("/builds", buildHandler.CreateBuild)
 	s.router.HandleFunc("/builds/", buildHandler.GetBuild)
 }

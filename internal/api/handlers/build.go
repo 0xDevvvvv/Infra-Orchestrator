@@ -7,12 +7,14 @@ import (
 	"time"
 
 	"github.com/0xDevvvvv/Infra-Orchestrator/internal/models"
+	"github.com/0xDevvvvv/Infra-Orchestrator/internal/queue"
 	"github.com/0xDevvvvv/Infra-Orchestrator/internal/storage"
 	"github.com/google/uuid"
 )
 
 type BuildHandler struct {
 	store *storage.BuildStore
+	queue *queue.BuildQueue
 }
 
 type CreateBuildRequest struct {
@@ -25,9 +27,10 @@ type CreateBuildResponse struct {
 	Status models.BuildStatus `json:"status"`
 }
 
-func NewBuildHandler(store *storage.BuildStore) *BuildHandler {
+func NewBuildHandler(store *storage.BuildStore, queue *queue.BuildQueue) *BuildHandler {
 	return &BuildHandler{
 		store: store,
+		queue: queue,
 	}
 }
 
@@ -60,6 +63,7 @@ func (h *BuildHandler) CreateBuild(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.store.Save(build)
+	h.queue.Enqueue(id)
 
 	response := CreateBuildResponse{
 		ID:     id,

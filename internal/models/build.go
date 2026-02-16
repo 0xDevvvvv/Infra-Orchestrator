@@ -6,6 +6,9 @@ type BuildStatus string
 
 const (
 	Pending BuildStatus = "PENDING"
+	Running BuildStatus = "RUNNING"
+	Success BuildStatus = "SUCCESS"
+	Failed  BuildStatus = "FAILED"
 )
 
 type Build struct {
